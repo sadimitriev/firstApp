@@ -30,7 +30,7 @@ class News: Object {
         
         title       = dictionary["title"]! as! String
         publishedAt = dictionary["publishedAt"]! as! String
-        id          =  MD5(title+publishedAt)
+        id          = MD5(title+publishedAt)
         //author      = dictionary["author"]! as! String
         //source    = dictionary["source"]["name"]! as! String
         //url         = dictionary["url"]! as! String
