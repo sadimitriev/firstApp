@@ -16,13 +16,13 @@ class TableViewController: UITableViewController {
     var pageId: Int = 1
     var limit: Int = 20
     
-    lazy var results: Results<News> = realm.objects(News.self).sorted(byKeyPath: "publishedAt", ascending: false)
-    lazy var news: [News] = []
+    lazy var news: Results<News> = realm.objects(News.self).sorted(byKeyPath: "publishedAt", ascending: false)
+    //lazy var news: [News] = []
         
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        limitNews(allNews: self.results)
+        //limitNews(allNews: self.results)
         
         let url = URL(string:"https://newsapi.org/v2/everything?q=bitcoin&apiKey=022b8292fe494a14b9aea96682f12bec&sortBy=publishedAt")!//&to=2019-05-15
         
@@ -54,7 +54,7 @@ class TableViewController: UITableViewController {
             }
             
             for i in 0 ..< limit {
-                self.news.append(allNews[i])
+                //self.news.append(allNews[i])
             }
         }
     }
@@ -100,8 +100,6 @@ class TableViewController: UITableViewController {
             self.fetchNews(ofIndex: indexPath.row)
         }
         cell.textLabel?.text = news[indexPath.row].publishedAt+news[indexPath.row].title
-        
-        
         
         return cell
     }
