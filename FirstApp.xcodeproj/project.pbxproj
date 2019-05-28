@@ -15,6 +15,8 @@
 		CFBF57DA2289ED470032BC7C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CFBF57D82289ED470032BC7C /* LaunchScreen.storyboard */; };
 		CFBF57E42289FD600032BC7C /* news.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBF57E32289FD600032BC7C /* news.swift */; };
 		CFBF57E6228A88FB0032BC7C /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBF57E5228A88FB0032BC7C /* TableViewController.swift */; };
+		CFF8918322917C8F00D695EF /* TableTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF8918222917C8F00D695EF /* TableTableViewCell.swift */; };
+		CFF893722291E7EA009860C4 /* FavoriteTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF893712291E7EA009860C4 /* FavoriteTableViewController.swift */; };
 		CFFFF73B228ACE8E003B8423 /* Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFFFF73A228ACE8E003B8423 /* Source.swift */; };
 /* End PBXBuildFile section */
 
@@ -30,6 +32,8 @@
 		CFBF57DB2289ED470032BC7C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CFBF57E32289FD600032BC7C /* news.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = news.swift; sourceTree = "<group>"; };
 		CFBF57E5228A88FB0032BC7C /* TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
+		CFF8918222917C8F00D695EF /* TableTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableTableViewCell.swift; sourceTree = "<group>"; };
+		CFF893712291E7EA009860C4 /* FavoriteTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteTableViewController.swift; sourceTree = "<group>"; };
 		CFFFF73A228ACE8E003B8423 /* Source.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Source.swift; sourceTree = "<group>"; };
 		DD29DF2EC61B5F7DB2FDD391 /* Pods_FirstApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FirstApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -84,6 +88,7 @@
 		CFBF57CE2289ED460032BC7C /* FirstApp */ = {
 			isa = PBXGroup;
 			children = (
+				CFF8918222917C8F00D695EF /* TableTableViewCell.swift */,
 				CFBF57CF2289ED460032BC7C /* AppDelegate.swift */,
 				CFBF57D12289ED460032BC7C /* ViewController.swift */,
 				CFBF57D32289ED460032BC7C /* Main.storyboard */,
@@ -93,6 +98,7 @@
 				CFBF57E32289FD600032BC7C /* news.swift */,
 				CFBF57E5228A88FB0032BC7C /* TableViewController.swift */,
 				CFFFF73A228ACE8E003B8423 /* Source.swift */,
+				CFF893712291E7EA009860C4 /* FavoriteTableViewController.swift */,
 			);
 			path = FirstApp;
 			sourceTree = "<group>";
@@ -221,9 +227,11 @@
 			files = (
 				CFBF57E42289FD600032BC7C /* news.swift in Sources */,
 				CFBF57D22289ED460032BC7C /* ViewController.swift in Sources */,
+				CFF8918322917C8F00D695EF /* TableTableViewCell.swift in Sources */,
 				CFBF57D02289ED460032BC7C /* AppDelegate.swift in Sources */,
 				CFFFF73B228ACE8E003B8423 /* Source.swift in Sources */,
 				CFBF57E6228A88FB0032BC7C /* TableViewController.swift in Sources */,
+				CFF893722291E7EA009860C4 /* FavoriteTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -369,7 +377,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 72760CB2A16749E5A882F155 /* Pods-FirstApp.debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = FirstApp/Info.plist;
@@ -389,7 +397,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3FCD6BE4CD9801D04172483C /* Pods-FirstApp.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = FirstApp/Info.plist;

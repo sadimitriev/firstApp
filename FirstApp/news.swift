@@ -9,7 +9,6 @@
 import Foundation
 import RealmSwift
 import CommonCrypto
-import RealmSwift
 
 class News: Object {
 
@@ -24,18 +23,28 @@ class News: Object {
     @objc dynamic var favorite: Int = 0
     
     func decode(from dictionary: Dictionary<String, Any>) {
+        
+        
+        
         if (dictionary["title"] == nil) {
             return
         }
         
+        let dateAsString = dictionary["publishedAt"] as! String
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        let date = dateFormatter.date(from: dateAsString)!
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        publishedAt = dateFormatter.string(from: date)
         title       = dictionary["title"]! as! String
-        publishedAt = dictionary["publishedAt"]! as! String
-        id          = MD5(title+publishedAt)
-        //author      = dictionary["author"]! as! String
-        //source    = dictionary["source"]["name"]! as! String
-        //url         = dictionary["url"]! as! String
-        //urlToImage  = dictionary["urlToImage"]! as! String
-        //content     = dictionary["content"]! as! String
+        id          = MD5(title+dateAsString)
+        //author      = dictionary["author"]! as? String ?? ""
+        //url         = dictionary["url"]! as? String ?? ""
+        //urlToImage  = dictionary["urlToImage"] as? String ?? ""
+        content     = dictionary["content"] as? String ?? ""
+        
+        //source    = dictionary["source"]?["name"]! as! String
     }
     
     override static func primaryKey() -> String? {

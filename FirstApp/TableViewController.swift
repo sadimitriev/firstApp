@@ -39,7 +39,6 @@ class TableViewController: UITableViewController {
                 
                 DispatchQueue.main.async {
                     self.addToRealm(news: newPosts)
-                    
                     self.tableView.reloadData()
                 }
             }
@@ -53,21 +52,26 @@ class TableViewController: UITableViewController {
                 limit = newsCount
             }
             
-            for i in 0 ..< limit {
-                //self.news.append(allNews[i])
-            }
+//            for i in 0 ..< limit {
+//                //self.news.append(allNews[i])
+//            }
         }
     }
     
     func mapNews(jsonNews: Array<Any>) -> [News] {
-        var news = Array<News>()
+        var newPosts = Array<News>()
+        
         let firstPullPosts = jsonNews//.prefix(20)
         for jsonPost in firstPullPosts {
             let post = News()
             post.decode(from: jsonPost as! Dictionary<String, Any>)
-            news.append(post)
+            
+            let test = realm.object(ofType: News.self, forPrimaryKey: post.id)
+            
+            post.favorite = test?.favorite as Int? ?? 0            
+            newPosts.append(post)
         }
-        return news
+        return newPosts
     }
     
     func addToRealm(news: [News]) {
@@ -94,12 +98,21 @@ class TableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as! TableTableViewCell
         
         if news.count == indexPath.row+1 {
             self.fetchNews(ofIndex: indexPath.row)
         }
-        cell.textLabel?.text = news[indexPath.row].publishedAt+news[indexPath.row].title
+        cell.cellTitle!.text = news[indexPath.row].title
+        cell.celldate!.text = news[indexPath.row].publishedAt
+        
+        let url = URL(string: news[indexPath.row].urlToImage ?? "")
+        
+        if (url != nil) {
+            if let data = try? Data(contentsOf: url!) {
+                cell.cellImage.image = UIImage(data: data)
+            }
+        }
         
         return cell
     }
