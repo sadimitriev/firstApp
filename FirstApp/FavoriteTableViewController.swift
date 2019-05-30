@@ -22,6 +22,7 @@ class FavorireTableViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         news = realm.objects(News.self).sorted(byKeyPath: "publishedAt", ascending: false).filter("favorite == 1")
+        dump(news)
         self.tableView.reloadData()
     }
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -54,5 +55,12 @@ class FavorireTableViewController: UITableViewController {
         selectedPostId = selectedPost.id
         
         performSegue(withIdentifier: "GoToFavoriteViewController", sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let vc = segue.destination as? ViewController else {
+            return
+        }
+        vc.postId = selectedPostId
     }
 }

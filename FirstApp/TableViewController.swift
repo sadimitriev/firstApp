@@ -33,6 +33,7 @@ class TableViewController: UITableViewController {
     func handleResponse(data: Data?, response: URLResponse?, error: Error?) {
         do {
             let values = try JSONSerialization.jsonObject(with: data!) as! Dictionary<String, Any>
+            
             if values["status"] as! String == "ok" {
                 let jsonNews = values["articles"] as! Array<Any>
                 let newPosts = mapNews(jsonNews: jsonNews)

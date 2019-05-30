@@ -6,6 +6,7 @@
 //  Copyright © 2019 Sergey Dimitriev. All rights reserved.
 //
 
+
 import Foundation
 import RealmSwift
 import CommonCrypto
@@ -22,8 +23,12 @@ class News: Object {
     @objc dynamic var content: String = ""
     @objc dynamic var favorite: Int = 0
     
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name
+    }
+    
     func decode(from dictionary: Dictionary<String, Any>) {
-        
         
         
         if (dictionary["title"] == nil) {
@@ -41,10 +46,19 @@ class News: Object {
         id          = MD5(title+dateAsString)
         //author      = dictionary["author"]! as? String ?? ""
         //url         = dictionary["url"]! as? String ?? ""
-        //urlToImage  = dictionary["urlToImage"] as? String ?? ""
+        urlToImage  = dictionary["urlToImage"] as? String ?? ""
         content     = dictionary["content"] as? String ?? ""
         
-        //source    = dictionary["source"]?["name"]! as! String
+        let test = convertAnyObjectToJSONString(from: dictionary["source"])
+        let dict = test?.toJSON() as? [String:AnyObject]
+        source = dict?["id"] as? String ?? ""
+    }
+    
+    func convertAnyObjectToJSONString(from object:Any) -> String? {
+        guard let data = try? JSONSerialization.data(withJSONObject: object, options: []) else {
+            return nil
+        }
+        return String(data: data, encoding: String.Encoding.utf8)
     }
     
     override static func primaryKey() -> String? {
@@ -66,4 +80,14 @@ class News: Object {
         }
     }
 
+}
+extension String {
+    func toJSON() -> Any? {
+        guard
+            let data = self.data(using: .utf8, allowLossyConversion: false)
+        else {
+            return nil
+        }
+        return try? JSONSerialization.jsonObject(with: data, options: .mutableContainers)
+    }
 }
