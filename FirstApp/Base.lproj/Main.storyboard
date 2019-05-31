@@ -91,7 +91,7 @@
             </objects>
             <point key="canvasLocation" x="2660" y="250.52473763118442"/>
         </scene>
-        <!--Root View Controller-->
+        <!--Источники-->
         <scene sceneID="UOh-ix-Btj">
             <objects>
                 <tableViewController id="oUl-ul-Auh" customClass="SourceTableViewController" customModule="FirstApp" customModuleProvider="target" sceneMemberID="viewController">
@@ -141,7 +141,7 @@
                             <outlet property="delegate" destination="oUl-ul-Auh" id="dK7-pw-Xr4"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Root View Controller" id="NbK-q5-v2r"/>
+                    <navigationItem key="navigationItem" title="Источники" id="NbK-q5-v2r"/>
                     <connections>
                         <segue destination="G06-dO-IUK" kind="show" identifier="GoToSourceController" id="JNt-yA-2IS"/>
                     </connections>

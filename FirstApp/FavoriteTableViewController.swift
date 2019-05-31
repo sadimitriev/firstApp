@@ -22,7 +22,6 @@ class FavorireTableViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         news = realm.objects(News.self).sorted(byKeyPath: "publishedAt", ascending: false).filter("favorite == 1")
-        dump(news)
         self.tableView.reloadData()
     }
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -39,11 +38,15 @@ class FavorireTableViewController: UITableViewController {
         cell.cellTitle!.text = news[indexPath.row].title
         cell.celldate!.text = news[indexPath.row].publishedAt
         
-        let url = URL(string: news[indexPath.row].urlToImage ?? "")
-        
+        let url = URL(string: (news[indexPath.row].urlToImage) ?? "")
         if (url != nil) {
-            if let data = try? Data(contentsOf: url!) {
-                cell.cellImage.image = UIImage(data: data)
+            DispatchQueue.global().async {
+                if let data = try? Data(contentsOf: url!){
+                    DispatchQueue.main.async {
+                        cell.cellImage.image = UIImage(data: data)
+                        cell.cellImage.contentMode = .scaleAspectFit
+                    }
+                }
             }
         }
         

@@ -20,14 +20,10 @@ class SourceCollection: UIViewController, UICollectionViewDelegate, UICollection
     var SourceId: String?
     var PostId: String?
     
-    lazy var news: Results<News> = realm.objects(News.self).sorted(byKeyPath: "publishedAt", ascending: false)
+    lazy var news: [News] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        
         
         guard let realSourceId = SourceId else {
             return
@@ -44,9 +40,9 @@ class SourceCollection: UIViewController, UICollectionViewDelegate, UICollection
         labelUrl.text = source?.url
         labelUrl.sizeToFit()
         
-        let news = realm.objects(News.self).filter("source == '\(realSourceId)'")
+        let news1 = realm.objects(News.self).filter("source == '\(realSourceId)'")
 
-        if news.count < 1 {
+        if news1.count < 1 {
             let alert = UIAlertController(title: "Статей не найдено", message: "Попробуйте другое.", preferredStyle: UIAlertController.Style.alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.destructive, handler: { action in
 
@@ -54,7 +50,16 @@ class SourceCollection: UIViewController, UICollectionViewDelegate, UICollection
             }))
             self.present(alert, animated: true, completion: nil)
         }
+        
+        if news1.isEmpty {} else {
+            let newsCount: Int = news1.count
+            for i in 0 ..< newsCount {
+                self.news.append(news1[i])
+            }
+        }
+        
         self.collectionView?.reloadData()
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -68,11 +73,15 @@ class SourceCollection: UIViewController, UICollectionViewDelegate, UICollection
         cell.contentField!.text = news[indexPath.row].content
         cell.dateField!.text = news[indexPath.row].publishedAt
         
-        let url = URL(string: news[indexPath.row].urlToImage ?? "")
-        
+        let url = URL(string: (news[indexPath.row].urlToImage) ?? "")
         if (url != nil) {
-            if let data = try? Data(contentsOf: url!) {
-                cell.ImageField.image = UIImage(data: data)
+            DispatchQueue.global().async {
+                if let data = try? Data(contentsOf: url!){
+                    DispatchQueue.main.async {
+                        cell.ImageField.image = UIImage(data: data)
+                        cell.ImageField.contentMode = .scaleAspectFit
+                    }
+                }
             }
         }
         

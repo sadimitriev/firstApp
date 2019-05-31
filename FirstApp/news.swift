@@ -23,10 +23,10 @@ class News: Object {
     @objc dynamic var content: String = ""
     @objc dynamic var favorite: Int = 0
     
-    enum CodingKeys: String, CodingKey {
-        case id
-        case name
-    }
+//    enum CodingKeys: String, CodingKey {
+//        case id
+//        case name
+//    }
     
     func decode(from dictionary: Dictionary<String, Any>) {
         

@@ -24,10 +24,42 @@ class TableViewController: UITableViewController {
         
         //limitNews(allNews: self.results)
         
-        let url = URL(string:"https://newsapi.org/v2/everything?q=bitcoin&apiKey=022b8292fe494a14b9aea96682f12bec&sortBy=publishedAt")!//&to=2019-05-15
+//        let url = URL(string:"https://newsapi.org/v2/everything?q=bitcoin&apiKey=022b8292fe494a14b9aea96682f12bec&sortBy=publishedAt")!//&to=2019-05-15
+//
+//        let task = URLSession.shared.dataTask(with: url, completionHandler: handleResponse)
+//        task.resume()
+        var postUrl = URL(string: "https://newsapi.org/v2/everything?q=bitcoin&apiKey=022b8292fe494a14b9aea96682f12bec&sortBy=publishedAt")!
         
-        let task = URLSession.shared.dataTask(with: url, completionHandler: handleResponse)
-        task.resume()
+        var request = URLRequest(url: postUrl)
+        request.httpMethod = "GET"
+        request.httpBody = Data()
+        request.addValue("contentType", forHTTPHeaderField: "Application/JSON")
+        
+        let newTask = URLSession.shared.dataTask(with: postUrl) { [weak self] data, response, error in
+            if error == nil {
+                do {
+                    let values = try JSONSerialization.jsonObject(with: data!) as! Dictionary<String, Any>
+                    
+                    if values["status"] as! String == "ok" {
+                        let jsonNews = values["articles"] as! Array<Any>
+                        let newPosts = self?.mapNews(jsonNews: jsonNews)
+                        
+                        DispatchQueue.main.async {
+                            self?.addToRealm(news: newPosts!)
+                            self?.tableView.reloadData()
+                        }
+                    }
+                } catch {
+                    print(error)
+                }
+            } else {
+                print(error)
+            }
+        }
+        newTask.resume()
+        
+        
+        let instance: String?
     }
     
     func handleResponse(data: Data?, response: URLResponse?, error: Error?) {
@@ -107,11 +139,15 @@ class TableViewController: UITableViewController {
         cell.cellTitle!.text = news[indexPath.row].title
         cell.celldate!.text = news[indexPath.row].publishedAt
         
-        let url = URL(string: news[indexPath.row].urlToImage ?? "")
-        
+        let url = URL(string: (news[indexPath.row].urlToImage) ?? "")
         if (url != nil) {
-            if let data = try? Data(contentsOf: url!) {
-                cell.cellImage.image = UIImage(data: data)
+            DispatchQueue.global().async {
+                if let data = try? Data(contentsOf: url!){
+                    DispatchQueue.main.async {
+                        cell.cellImage.image = UIImage(data: data)
+                        cell.cellImage.contentMode = .scaleAspectFit
+                    }
+                }
             }
         }
         
@@ -129,10 +165,56 @@ class TableViewController: UITableViewController {
         
         self.pageId += 1
         
-        let url = URL(string:"https://newsapi.org/v2/everything?q=bitcoin&apiKey=022b8292fe494a14b9aea96682f12bec&sortBy=publishedAt&page=\(self.pageId)")!//
+        let postUrl = URL(string:"https://newsapi.org/v2/everything?q=bitcoin&apiKey=022b8292fe494a14b9aea96682f12bec&sortBy=publishedAt&page=\(self.pageId)")!
         
-        let task = URLSession.shared.dataTask(with: url, completionHandler: handleResponse)
-        task.resume()
+        var request = URLRequest(url: postUrl)
+        request.httpMethod = "GET"
+        request.httpBody = Data()
+        request.addValue("contentType", forHTTPHeaderField: "Application/JSON")
+        
+        let newTask = URLSession.shared.dataTask(with: postUrl) { [weak self] data, response, error in
+            if error == nil {
+                do {
+                    let values = try JSONSerialization.jsonObject(with: data!) as! Dictionary<String, Any>
+                    
+                    if values["status"] as! String == "ok" {
+                        let jsonNews = values["articles"] as! Array<Any>
+                        let newPosts = self?.mapNews(jsonNews: jsonNews)
+                        
+                        DispatchQueue.main.async {
+                            self?.addToRealm(news: newPosts!)
+                            self?.tableView.reloadData()
+                        }
+                    }
+                } catch {
+                    print(error)
+                }
+            } else {
+                print(error)
+            }
+        }
+        newTask.resume()
     }
-    
+}
+extension URLSession {
+    func synchronousDataTask(with url: URL) -> (Data?, URLResponse?, Error?) {
+        var data: Data?
+        var response: URLResponse?
+        var error: Error?
+        
+        let semaphore = DispatchSemaphore(value: 0)
+        
+        let dataTask = self.dataTask(with: url) {
+            data = $0
+            response = $1
+            error = $2
+            
+            semaphore.signal()
+        }
+        dataTask.resume()
+        
+        _ = semaphore.wait(timeout: .distantFuture)
+        
+        return (data, response, error)
+    }
 }

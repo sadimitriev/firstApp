@@ -11,15 +11,11 @@ import RealmSwift
 
 class ViewController: UIViewController {
     
-    
-
     @IBOutlet weak var detailTitle: UILabel!
     @IBOutlet weak var detailContent: UILabel!
     @IBOutlet weak var detailDate: UILabel!
     @IBOutlet weak var detailImage: UIImageView!
     @IBOutlet weak var detailFavorite: UIButton!
-    
-
     
     var realm: Realm { return try! Realm() }
     var postId: String?
@@ -38,7 +34,6 @@ class ViewController: UIViewController {
         detailTitle.text = post?.title
         detailTitle.sizeToFit()
         
-        
         detailDate.text = post?.publishedAt
         
         detailContent.numberOfLines = 0
@@ -47,10 +42,14 @@ class ViewController: UIViewController {
         detailContent.sizeToFit()
         
         let url = URL(string: post?.urlToImage ?? "")
-        
         if (url != nil) {
-            if let data = try? Data(contentsOf: url!) {
-                detailImage.image = UIImage(data: data)
+            DispatchQueue.global().async {
+                if let data = try? Data(contentsOf: url!){
+                    DispatchQueue.main.async {
+                        self.detailImage.image = UIImage(data: data)
+                        self.detailImage.contentMode = .scaleAspectFit
+                    }
+                }
             }
         }
         
@@ -59,7 +58,6 @@ class ViewController: UIViewController {
         } else {
             detailFavorite.setBackgroundImage(UIImage(named: "f-gold.png"), for: UIControl.State.normal)
         }
-        
     }
     @IBAction func detailButtonClick(_ sender: Any) {
         
